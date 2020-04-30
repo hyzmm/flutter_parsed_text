@@ -162,6 +162,7 @@ class ParsedText extends StatelessWidget {
               widget = builder(
                 style: e.style != null ? e.style : style,
                 text: "$element",
+                value: "$element",
               );
             }
             break;
