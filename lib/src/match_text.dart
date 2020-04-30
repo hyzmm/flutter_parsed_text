@@ -28,6 +28,8 @@ class MatchText {
   /// Your pattern for ID & username extraction : `/\[(@[^:]+):([^\]]+)\]/`i
   /// Displayed text will be : Mention `@michel`
   Function({String str, String pattern}) renderText;
+  final InlineSpan Function(
+      {String text, TextStyle style, dynamic value}) builder;
 
   final RegexOptions regexOptions;
 
@@ -38,6 +40,7 @@ class MatchText {
     this.style,
     this.onTap,
     this.renderText,
+    this.builder,
     this.regexOptions = const RegexOptions(),
   });
 }

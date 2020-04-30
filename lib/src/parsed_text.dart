@@ -57,7 +57,7 @@ class ParsedText extends StatelessWidget {
   final TextWidthBasis textWidthBasis;
 
   /// Make this text selectable.
-  /// 
+  ///
   /// SelectableText does not support softwrap, overflow, textScaleFactor
   final bool selectable;
 
@@ -123,9 +123,9 @@ class ParsedText extends StatelessWidget {
     // checks if each word matches either a predefined type of custom defined patterns
     // if a match is found creates a link Text with its function or return a
     // default Text
-    List<TextSpan> widgets = splits.map<TextSpan>((element) {
+    var widgets = splits.map<InlineSpan>((element) {
       // Default Text object if not pattern is matched
-      TextSpan widget = TextSpan(
+      InlineSpan widget = TextSpan(
         text: "$element",
       );
 
@@ -141,22 +141,27 @@ class ParsedText extends StatelessWidget {
           bool matched = customRegExp.hasMatch(element);
 
           if (matched) {
+            var builder = e.builder;
+            if (builder == null)
+              builder = ({style, text, value}) => TextSpan(
+                  style: style,
+                  text: text,
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () => e.onTap(value));
+
             if (e.renderText != null) {
-              Map<String, String> result =
+              Map<String, dynamic> result =
                   e.renderText(str: element, pattern: e.pattern);
 
-              widget = TextSpan(
+              widget = builder(
                 style: e.style != null ? e.style : style,
                 text: "${result['display']}",
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () => e.onTap(result['value']),
+                value: result['value'],
               );
             } else {
-              widget = TextSpan(
+              widget = builder(
                 style: e.style != null ? e.style : style,
                 text: "$element",
-                recognizer: TapGestureRecognizer()
-                  ..onTap = () => e.onTap(element),
               );
             }
             break;
@@ -230,7 +235,7 @@ class ParsedText extends StatelessWidget {
       textWidthBasis: textWidthBasis,
       textAlign: alignment,
       textDirection: textDirection,
-      text: TextSpan(children: <TextSpan>[...widgets], style: style),
+      text: TextSpan(children: widgets, style: style),
     );
   }
 }
