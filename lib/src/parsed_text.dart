@@ -155,7 +155,7 @@ class ParsedText extends StatelessWidget {
 
               widget = builder(
                 style: e.style != null ? e.style : style,
-                text: "${result['display']}",
+                text: result['display'],
                 value: result['value'],
               );
             } else {
