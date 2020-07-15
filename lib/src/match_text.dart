@@ -29,7 +29,7 @@ class MatchText {
   /// Displayed text will be : Mention `@michel`
   Function({String str, String pattern}) renderText;
   final InlineSpan Function(
-      {String text, TextStyle style, dynamic value}) builder;
+      {String text, TextStyle style, dynamic value, bool beginningOfLine}) builder;
 
   final RegexOptions regexOptions;
 

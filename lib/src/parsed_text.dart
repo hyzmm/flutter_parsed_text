@@ -123,8 +123,9 @@ class ParsedText extends StatelessWidget {
     // checks if each word matches either a predefined type of custom defined patterns
     // if a match is found creates a link Text with its function or return a
     // default Text
+    int index = 0;
     var widgets = splits.map<InlineSpan>((element) {
-      // Default Text object if not pattern is matched
+// Default Text object if not pattern is matched
       InlineSpan widget = TextSpan(
         text: "$element",
       );
@@ -142,21 +143,20 @@ class ParsedText extends StatelessWidget {
 
           if (matched) {
             var builder = e.builder;
-            if (builder == null)
-              builder = ({style, text, value}) => TextSpan(
-                  style: style,
-                  text: text,
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () => e.onTap(value));
+            builder ??= ({style, text, value, beginningOfLine}) => TextSpan(
+                style: style,
+                text: text,
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () => e.onTap(value));
 
             if (e.renderText != null) {
               Map<String, dynamic> result =
                   e.renderText(str: element, pattern: e.pattern);
-
               widget = builder(
                 style: e.style != null ? e.style : style,
                 text: result['display'],
                 value: result['value'],
+                beginningOfLine: index == 0,
               );
             } else {
               widget = builder(
@@ -174,7 +174,7 @@ class ParsedText extends StatelessWidget {
 
           if (matched) {
             widget = TextSpan(
-              style: e.style != null ? e.style : style,
+              style: e.style ?? style,
               text: "$element",
               recognizer: TapGestureRecognizer()
                 ..onTap = () => e.onTap(element),
@@ -211,6 +211,8 @@ class ParsedText extends StatelessWidget {
           }
         }
       }
+
+      if (element.isNotEmpty) index++;
 
       return widget;
     }).toList();
